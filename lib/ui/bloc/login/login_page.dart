@@ -4,9 +4,11 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, prefer_final_fields, unused_field, body_might_complete_normally_nullable, avoid_print, unused_import, empty_statements
 
 import 'dart:ffi';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_homework/ui/bloc/list/list_page.dart';
 import 'package:flutter_homework/ui/bloc/login/login_bloc.dart';
 import 'package:validators/sanitizers.dart';
 import 'package:validators/validators.dart';
@@ -21,6 +23,7 @@ class LoginPageBloc extends StatefulWidget {
 class _LoginPageBlocState extends State<LoginPageBloc> {
   @override
   void initState() {
+    //context.read<LoginBloc>().add(LoginAutoLoginEvent());
     super.initState();
   }
 
@@ -42,6 +45,8 @@ class _LoginPageBlocState extends State<LoginPageBloc> {
           listener: (context, state) {
             if (state is LoginError) {
               buildError(state.message);
+            } else if (state is LoginSuccess) {
+              Navigator.of(context).pushReplacementNamed('/list');
             }
           },
           builder: (context, state) {
@@ -86,7 +91,7 @@ class _LoginPageBlocState extends State<LoginPageBloc> {
                     height: 50,
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      border: Border.all(color: Colors.white),
+                      border: Border.all(color: Colors.amber),
                       borderRadius: BorderRadius.circular(18),
                     ),
                     child: Padding(
@@ -131,7 +136,7 @@ class _LoginPageBlocState extends State<LoginPageBloc> {
                     height: 50,
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      border: Border.all(color: Colors.white),
+                      border: Border.all(color: Colors.amber),
                       borderRadius: BorderRadius.circular(18),
                     ),
                     child: Padding(
@@ -163,14 +168,32 @@ class _LoginPageBlocState extends State<LoginPageBloc> {
 
                 //jegyezz meg checkbox
                 SizedBox(height: 20),
-                CheckboxListTile(
-                    title: Text('Jegyezz meg'),
-                    value: _rememberMe,
-                    onChanged: (value) {
-                      setState(() {
-                        if (value != null) _rememberMe = value;
-                      });
-                    }),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Container(
+                    width: 200,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border.all(color: Colors.amber),
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    child: CheckboxListTile(
+                        title: Text(
+                          'Jegyezz meg',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.black),
+                        ),
+                        value: _rememberMe,
+                        onChanged: (value) {
+                          setState(() {
+                            if (value != null) _rememberMe = value;
+                          });
+                        }),
+                  ),
+                ),
 
                 //bejelentkezési gomb
                 SizedBox(height: 20),
@@ -313,6 +336,33 @@ class _LoginPageBlocState extends State<LoginPageBloc> {
 
                 //jegyezz meg checkbox
                 SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Container(
+                    width: 200,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border.all(color: Colors.amber),
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    child: CheckboxListTile(
+                        enabled: false,
+                        title: Text(
+                          'Jegyezz meg',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.black),
+                        ),
+                        value: _rememberMe,
+                        onChanged: (value) {
+                          setState(() {
+                            if (value != null) _rememberMe = value;
+                          });
+                        }),
+                  ),
+                ),
 
                 //bejelentkezési gomb
                 SizedBox(height: 20),
@@ -326,7 +376,7 @@ class _LoginPageBlocState extends State<LoginPageBloc> {
   }
 
   Widget buildLoaded() {
-    return Text('kész');
+    return ListPageBloc();
   }
 
   ScaffoldFeatureController buildError(String message) =>

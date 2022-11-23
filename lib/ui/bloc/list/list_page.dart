@@ -13,7 +13,6 @@ class ListPageBloc extends StatefulWidget {
 }
 
 class _ListPageBlocState extends State<ListPageBloc> {
-
   @override
   void initState() {
     super.initState();
@@ -21,6 +20,10 @@ class _ListPageBlocState extends State<ListPageBloc> {
 
   @override
   Widget build(BuildContext context) {
-    throw UnimplementedError('Page not implemented!');
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('List Page'),
+      ),
+    );
   }
 }

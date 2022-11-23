@@ -26,13 +26,22 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           if (event.rememberMe) {
             GetIt.I<SharedPreferences>()
                 .setString('token', loginToken.data['token']);
+            emit(LoginSuccess());
           }
           emit(LoginSuccess());
+        } else {
           emit(LoginForm());
         }
       } on DioError catch (e) {
         emit(LoginError(e.response?.data['message']));
         emit(LoginForm());
+      }
+    }));
+
+    on<LoginAutoLoginEvent>(((event, emit) async {
+      var token = GetIt.I<SharedPreferences>().getString('token');
+      if (token != null) {
+        emit(LoginSuccess());
       }
     }));
   }

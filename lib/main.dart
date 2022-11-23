@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_homework/network/data_source_interceptor.dart';
+import 'package:flutter_homework/ui/bloc/list/list_page.dart';
 import 'package:flutter_homework/ui/bloc/login/login_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
@@ -51,6 +52,10 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'Flutter Demo',
           home: LoginPageBloc(),
+          routes: {
+            '/login': (context) => (LoginPageBloc()),
+            '/list': (context) => (ListPageBloc()),
+          },
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
