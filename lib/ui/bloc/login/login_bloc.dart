@@ -22,16 +22,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           'password': event.password,
         };
         loginToken = await GetIt.I<Dio>().post('/login', data: map);
-        if (loginToken.data.toString().contains('token')) {
-          if (event.rememberMe) {
-            GetIt.I<SharedPreferences>()
-                .setString('token', loginToken.data['token']);
-            emit(LoginSuccess());
-          }
-          emit(LoginSuccess());
-        } else {
-          emit(LoginForm());
+        if (event.rememberMe) {
+          GetIt.I<SharedPreferences>()
+              .setString('token', loginToken.data['token']);
         }
+        emit(LoginSuccess());
+        emit(LoginForm());
       } on DioError catch (e) {
         emit(LoginError(e.response?.data['message']));
         emit(LoginForm());

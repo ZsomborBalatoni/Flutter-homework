@@ -6,10 +6,13 @@
 import 'dart:ffi';
 import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_homework/ui/bloc/list/list_page.dart';
 import 'package:flutter_homework/ui/bloc/login/login_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:validators/sanitizers.dart';
 import 'package:validators/validators.dart';
 
@@ -201,6 +204,16 @@ class _LoginPageBlocState extends State<LoginPageBloc> {
                   onPressed: (() {
                     if (errorEmailTextvalue == '' &&
                         errorPasswordTextvalue == '') {
+                      Map<String, String> map = {
+                        'email': _email,
+                        'password': _password,
+                      };
+                      Response loginToken =
+                          GetIt.I<Dio>().post('/login', data: map) as Response;
+                      if (_rememberMe) {
+                        GetIt.I<SharedPreferences>()
+                            .setString('token', loginToken.data['token']);
+                      }
                       context.read<LoginBloc>().add(
                           LoginSubmitEvent(_email, _password, _rememberMe));
                     }

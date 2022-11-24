@@ -8,6 +8,9 @@ part 'list_state.dart';
 
 class ListBloc extends Bloc<ListEvent, ListState> {
   ListBloc() : super(ListInitial()) {
-
+    /*
+    on<ListLoadEvent>(
+      (event, emit) async {},
+    );*/
   }
 }
