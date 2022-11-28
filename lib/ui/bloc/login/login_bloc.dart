@@ -16,18 +16,20 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
     on<LoginSubmitEvent>(((event, emit) async {
       try {
-        emit(LoginLoading());
-        Map<String, String> map = {
-          'email': event.email,
-          'password': event.password,
-        };
-        loginToken = await GetIt.I<Dio>().post('/login', data: map);
-        if (event.rememberMe) {
-          GetIt.I<SharedPreferences>()
-              .setString('token', loginToken.data['token']);
+        if (state != LoginLoading()) {
+          emit(LoginLoading());
+          Map<String, String> map = {
+            'email': event.email,
+            'password': event.password,
+          };
+          loginToken = await GetIt.I<Dio>().post('/login', data: map);
+          if (event.rememberMe) {
+            GetIt.I<SharedPreferences>()
+                .setString('token', loginToken.data['token']);
+          }
+          emit(LoginSuccess());
+          emit(LoginForm());
         }
-        emit(LoginSuccess());
-        emit(LoginForm());
       } on DioError catch (e) {
         emit(LoginError(e.response?.data['message']));
         emit(LoginForm());

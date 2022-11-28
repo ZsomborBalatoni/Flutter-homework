@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'Flutter Demo',
           home: LoginPageBloc(),
-          initialRoute: '/login',
+          initialRoute: '/',
           routes: {
             '/login': (context) => (LoginPageBloc()),
             '/list': (context) => (ListPageBloc()),

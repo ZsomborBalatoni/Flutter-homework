@@ -26,7 +26,7 @@ class LoginPageBloc extends StatefulWidget {
 class _LoginPageBlocState extends State<LoginPageBloc> {
   @override
   void initState() {
-    //context.read<LoginBloc>().add(LoginAutoLoginEvent());
+    context.read<LoginBloc>().add(LoginAutoLoginEvent());
     super.initState();
   }
 
@@ -55,8 +55,6 @@ class _LoginPageBlocState extends State<LoginPageBloc> {
           builder: (context, state) {
             if (state is LoginLoading) {
               return buildLoading();
-            } else if (state is LoginSuccess) {
-              return buildLoaded();
             } else {
               return buildForm();
             }
@@ -204,16 +202,6 @@ class _LoginPageBlocState extends State<LoginPageBloc> {
                   onPressed: (() {
                     if (errorEmailTextvalue == '' &&
                         errorPasswordTextvalue == '') {
-                      Map<String, String> map = {
-                        'email': _email,
-                        'password': _password,
-                      };
-                      Response loginToken =
-                          GetIt.I<Dio>().post('/login', data: map) as Response;
-                      if (_rememberMe) {
-                        GetIt.I<SharedPreferences>()
-                            .setString('token', loginToken.data['token']);
-                      }
                       context.read<LoginBloc>().add(
                           LoginSubmitEvent(_email, _password, _rememberMe));
                     }
@@ -386,10 +374,6 @@ class _LoginPageBlocState extends State<LoginPageBloc> {
         ),
       ),
     );
-  }
-
-  Widget buildLoaded() {
-    return ListPageBloc();
   }
 
   ScaffoldFeatureController buildError(String message) =>

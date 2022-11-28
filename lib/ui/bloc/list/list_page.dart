@@ -31,8 +31,8 @@ class _ListPageBlocState extends State<ListPageBloc> {
         leading: IconButton(
           icon: const Icon(Icons.exit_to_app),
           onPressed: (() {
-            Navigator.of(context).pushReplacementNamed('/login');
-            const LoginPageBloc();
+            GetIt.I<SharedPreferences>().clear();
+            Navigator.of(context).pushReplacementNamed('/');
           }),
         ),
       ),
