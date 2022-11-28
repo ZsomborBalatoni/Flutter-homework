@@ -27,6 +27,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             GetIt.I<SharedPreferences>()
                 .setString('token', loginToken.data['token']);
           }
+          GetIt.I<Dio>().options.headers['Authorization'] =
+              'Bearer ${loginToken.data['token']}';
+
           emit(LoginSuccess());
           emit(LoginForm());
         }
@@ -37,9 +40,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }));
 
     on<LoginAutoLoginEvent>(((event, emit) async {
-      var token = GetIt.I<SharedPreferences>().getString('token');
-      if (token != null) {
-        emit(LoginSuccess());
+      if (GetIt.I<SharedPreferences>().containsKey('token')) {
+        var token = GetIt.I<SharedPreferences>().getString('token');
+
+        if (token != null) {
+          GetIt.I<Dio>().options.headers['Authorization'] = 'Bearer $token';
+          emit(LoginSuccess());
+        }
       }
     }));
   }

@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_homework/network/user_item.dart';
 import 'package:flutter_homework/ui/bloc/list/list_bloc.dart';
 import 'package:flutter_homework/ui/bloc/login/login_bloc.dart';
 import 'package:flutter_homework/ui/bloc/login/login_page.dart';
@@ -13,6 +15,8 @@ class ListPageBloc extends StatefulWidget {
   @override
   State<ListPageBloc> createState() => _ListPageBlocState();
 }
+
+List<UserItem> users = [];
 
 class _ListPageBlocState extends State<ListPageBloc> {
   @override
@@ -41,14 +45,19 @@ class _ListPageBlocState extends State<ListPageBloc> {
           listener: (context, state) {
             if (state is ListError) {
               buildListError(state.message);
+            } else if (state is ListLoading) {
+              GetIt.I<Dio>().options.headers['Authorization'] =
+                  'Bearer ${GetIt.I<SharedPreferences>().getString('token')}';
             }
           },
           builder: (context, state) {
             if (state is ListLoading) {
               return buildListLoading();
             } else if (state is ListLoaded) {
-              return buildListLoaded();
+              users = state.users;
+              return buildListLoaded(users);
             } else {
+              context.read<ListBloc>().add(ListLoadEvent());
               return buildListInitial();
             }
           },
@@ -65,7 +74,7 @@ class _ListPageBlocState extends State<ListPageBloc> {
           child: Form(
             child: Column(children: const [
               SizedBox(height: 40),
-              Text('sddsd'),
+              Text('Lista'),
             ]),
           ),
         ),
@@ -81,7 +90,7 @@ class _ListPageBlocState extends State<ListPageBloc> {
           child: Form(
             child: Column(children: const [
               SizedBox(height: 40),
-              Text('sddsd'),
+              CircularProgressIndicator(),
             ]),
           ),
         ),
@@ -89,19 +98,15 @@ class _ListPageBlocState extends State<ListPageBloc> {
     );
   }
 
-  Widget buildListLoaded() {
-    return Scaffold(
-      backgroundColor: Colors.blueGrey[500],
-      body: SafeArea(
-        child: Center(
-          child: Form(
-            child: Column(children: const [
-              SizedBox(height: 40),
-              Text('sddsd'),
-            ]),
-          ),
-        ),
-      ),
+  Widget buildListLoaded(users) {
+    return ListView.builder(
+      itemCount: users.length,
+      itemBuilder: ((context, index) {
+        return ListTile(
+          title: Text(users[index].name),
+          leading: Image.network(users[index].avatarUrl),
+        );
+      }),
     );
   }
 
